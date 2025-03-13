@@ -13,7 +13,7 @@ class AnimeRepository {
      * @param word - ищет тайтлы в названиях которых есть эта подстрока,
      * если без параметра, то вернет полный список аниме
      */
-    fun getShortList(word: String = ""): List<AnimeShortEntity> =
+    fun getList(word: String = ""): List<AnimeShortEntity> =
         AnimeData.animeShort.filter { it.title.contains(word, ignoreCase = true) }
 
     /**
