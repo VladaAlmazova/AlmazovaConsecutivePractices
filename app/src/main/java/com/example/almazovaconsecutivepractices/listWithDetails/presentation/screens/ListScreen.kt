@@ -1,5 +1,6 @@
 package com.example.almazovaconsecutivepractices.listWithDetails.presentation.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -21,15 +22,39 @@ import com.github.terrakok.modo.ScreenKey
 import com.github.terrakok.modo.generateScreenKey
 import kotlinx.parcelize.Parcelize
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.TopAppBar
+import com.github.terrakok.modo.stack.LocalStackNavigation
+import com.github.terrakok.modo.stack.StackNavContainer
+import com.github.terrakok.modo.stack.forward
 
 @Parcelize
 class ListScreen(override val screenKey: ScreenKey = generateScreenKey()) : Screen {
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(modifier: Modifier) {
+        val stackNavigation = LocalStackNavigation.current
+
         Box(
             modifier = modifier
-        ){
-            AnimeList(AnimeRepository().getList())
+                .padding(
+                    vertical = 50.dp
+                )
+        ) {
+            LazyColumn(
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 10.dp)
+            )
+            {
+                items(AnimeRepository().getList()) { item -> AnimeItem(
+                    item = item,
+                    openNextScreen = {
+                        stackNavigation.forward(DetailsScreen(item.id))
+                    }
+                )}
+            }
         }
     }
 }
@@ -40,12 +65,14 @@ class ListScreen(override val screenKey: ScreenKey = generateScreenKey()) : Scre
 @Composable
 fun AnimeItem(
     item: AnimeShortEntity,
+    openNextScreen: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(5.dp),
+            .padding(5.dp)
+            .clickable { openNextScreen() },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.Start),
     ) {
@@ -63,38 +90,15 @@ fun AnimeItem(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun AnimeItemPreview() {
-    AnimeItem(item = AnimeRepository().getList().first())
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun AnimeItemPreview() {
+//    AnimeItem(item = AnimeRepository().getList().first())
+//}
 
 /**
  * Возвращает текстовое представление средней оценки тайтла
  */
 fun textAverageScore(averageScore: Int): String {
     return (averageScore.toFloat() / 10).toString()
-}
-
-/**
- * Ленивый список тайтлов
- */
-@Composable
-fun AnimeList(
-    items: List<AnimeShortEntity>,
-    modifier: Modifier = Modifier
-) {
-    LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-    )
-    {
-        items(items) { item -> AnimeItem(item) }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun AnimeListPreview() {
-    AnimeList(AnimeRepository().getList())
 }

@@ -11,37 +11,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.almazovaconsecutivepractices.listWithDetails.presentation.screens.ListScreen
 import com.example.almazovaconsecutivepractices.ui.theme.AlmazovaConsecutivePracticesTheme
+import com.github.terrakok.modo.Modo.rememberRootScreen
+import com.github.terrakok.modo.stack.DefaultStackScreen
+import com.github.terrakok.modo.stack.StackNavModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+//        enableEdgeToEdge()
         setContent {
-            AlmazovaConsecutivePracticesTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+            val rootScreen = rememberRootScreen {
+                DefaultStackScreen(StackNavModel(ListScreen()))
             }
+            rootScreen.Content(modifier = Modifier.fillMaxSize())
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    AlmazovaConsecutivePracticesTheme {
-        Greeting("Android")
     }
 }

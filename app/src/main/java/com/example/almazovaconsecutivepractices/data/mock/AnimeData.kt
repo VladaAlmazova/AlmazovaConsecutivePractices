@@ -57,7 +57,7 @@ object AnimeData {
         AnimeFullEntity(
             id = 1,
             title = "Cowboy Bebop",
-            coverImageLargeUrl = "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx1-CXtrrkMpJ8Zq.png",
+            coverImageExtraLargeUrl = "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx1-CXtrrkMpJ8Zq.png",
             averageScore = 86,
             genres = listOf("Action", "Adventure", "Drama", "Sci-Fi"),
             tags = listOf(
@@ -74,7 +74,7 @@ object AnimeData {
         AnimeFullEntity(
             id = 5,
             title = "Cowboy Bebop: The Movie - Knockin' on Heaven's Door",
-            coverImageLargeUrl = "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx5-NozHwXWdNLCz.jpg",
+            coverImageExtraLargeUrl = "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx5-NozHwXWdNLCz.jpg",
             averageScore = 82,
             genres = listOf("Action", "Drama", "Mystery", "Sci-Fi"),
             tags = listOf(
@@ -89,7 +89,7 @@ object AnimeData {
         AnimeFullEntity(
             id = 6,
             title = "Trigun",
-            coverImageLargeUrl = "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx6-Zzun7PHNNgPt.jpg",
+            coverImageExtraLargeUrl = "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx6-Zzun7PHNNgPt.jpg",
             averageScore = 80,
             genres = listOf("Action", "Adventure", "Comedy", "Drama", "Sci-Fi"),
             tags = listOf(
@@ -105,7 +105,7 @@ object AnimeData {
         AnimeFullEntity(
             id = 7,
             title = "Witch Hunter ROBIN",
-            coverImageLargeUrl = "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx7-6uh1fPvbgS9t.png",
+            coverImageExtraLargeUrl = "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx7-6uh1fPvbgS9t.png",
             averageScore = 68,
             genres = listOf("Action", "Drama", "Mystery", "Supernatural"),
             tags = listOf(
@@ -118,7 +118,7 @@ object AnimeData {
         AnimeFullEntity(
             id = 8,
             title = "Beet the Vandel Buster",
-            coverImageLargeUrl = "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/b8-ReS3TwSgrDDi.jpg",
+            coverImageExtraLargeUrl = "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/b8-ReS3TwSgrDDi.jpg",
             averageScore = 65,
             genres = listOf("Adventure", "Fantasy", "Supernatural"),
             tags = listOf(Tag("Shounen"), Tag("Spearplay"), Tag("Swordplay"))
@@ -126,7 +126,7 @@ object AnimeData {
         AnimeFullEntity(
             id = 15,
             title = "Eyeshield 21",
-            coverImageLargeUrl = "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx15-A4F2t0TgWoi4.png",
+            coverImageExtraLargeUrl = "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx15-A4F2t0TgWoi4.png",
             averageScore = 76,
             genres = listOf("Action", "Comedy", "Sports"),
             tags = listOf(
@@ -139,7 +139,7 @@ object AnimeData {
         AnimeFullEntity(
             id = 16,
             title = "Honey and Clover",
-            coverImageLargeUrl = "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx16-5fJZ2Sy2ThRA.jpg",
+            coverImageExtraLargeUrl = "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx16-5fJZ2Sy2ThRA.jpg",
             averageScore = 76,
             genres = listOf("Comedy", "Drama", "Romance", "Slice of Life"),
             tags = listOf(
