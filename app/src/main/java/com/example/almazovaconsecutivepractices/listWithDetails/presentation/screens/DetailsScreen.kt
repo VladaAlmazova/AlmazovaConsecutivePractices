@@ -29,6 +29,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeCompilerApi
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,6 +40,7 @@ import androidx.compose.ui.focus.FocusRequester.Companion.createRefs
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -63,14 +68,17 @@ class DetailsScreen(
         Column(modifier = Modifier) {
             UpToolbar(title = " ", onBackClick = { stackNavigation.back() })
 
-            val title: AnimeFullEntity? = AnimeRepository().getById(titleId)
-            if (title == null) Text(
-                text = "Тайтл не найден", modifier = modifier.fillMaxSize(), fontSize = 40.sp
-            )
-            else {
+            val anime = AnimeRepository().getById(titleId)
+
+            if (anime == null) {
                 Text(
-                    text = title.title, modifier = modifier.fillMaxSize(), fontSize = 40.sp
+                    text = "Аниме не найдено",
+                    modifier = Modifier.fillMaxSize(),
+                    textAlign = TextAlign.Center,
+                    fontSize = 20.sp
                 )
+            } else {
+                ConstraintLayoutContent(anime)
             }
         }
     }
@@ -88,9 +96,8 @@ fun UpToolbar(title: String, onBackClick: () -> Unit) {
 }
 
 @Composable
-fun ConstraintLayoutContent() {
-    val animeFullEntity = AnimeRepository().getById(1)
-    if (animeFullEntity == null) return
+fun ConstraintLayoutContent(animeFullEntity: AnimeFullEntity) {
+    var myScore by remember { mutableStateOf(0f) }  // Добавляем состояние
 
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
         val (imgRef, titleRef, scoreRef, myScoreRef, genresRef, tagsRef, saveRef) = createRefs()
@@ -125,32 +132,28 @@ fun ConstraintLayoutContent() {
             })
 
         Box(modifier = Modifier.constrainAs(scoreRef) {
-                top.linkTo(
-                    anchor = genresRef.bottom, margin = 16.dp
-                )
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            }) {
+            top.linkTo(
+                anchor = genresRef.bottom, margin = 16.dp
+            )
+            start.linkTo(parent.start)
+            end.linkTo(parent.end)
+        }) {
             LargeTextAverageScore(animeFullEntity.averageScore)
         }
 
-        var myScore = 0f
-
         SliderRating(modifier = Modifier.constrainAs(myScoreRef) {
-                top.linkTo(
-                    anchor = scoreRef.bottom, margin = 16.dp
-                )
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            }, rating = myScore, onRatingChanged = { newRating -> myScore = newRating })
+            top.linkTo(scoreRef.bottom, margin = 16.dp)
+            start.linkTo(parent.start)
+            end.linkTo(parent.end)
+        }, rating = myScore, onRatingChanged = { newRating -> myScore = newRating })
     }
 }
 
-@Preview
-@Composable
-fun prevDetails() {
-    ConstraintLayoutContent()
-}
+//@Preview
+//@Composable
+//fun prevDetails() {
+//    ConstraintLayoutContent()
+//}
 
 @Composable
 fun SaveToCollectionButton(modifier: Modifier, isSaved: Boolean = false, onClick: () -> Unit = {}) {
@@ -244,16 +247,19 @@ fun LargeTextAverageScore(averageScore: Int) {
 
 @Composable
 fun SliderRating(
-    modifier: Modifier, rating: Float, // Текущий рейтинг (0-10)
-    onRatingChanged: (Float) -> Unit // Колбек при изменении рейтинга
+    modifier: Modifier, rating: Float,
+    onRatingChanged: (Float) -> Unit
 ) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Slider(
             value = rating,
             onValueChange = { newValue -> onRatingChanged(newValue) },
-            valueRange = 0f..10f, // Диапазон от 0 до 10
-            steps = 9, // Делаем шаг 1.0 (чтобы было 10 делений)
-            modifier = modifier.padding(horizontal = 16.dp)
+            valueRange = 0f..10f,
+            steps = 9,
+            modifier = Modifier.padding(horizontal = 16.dp)
         )
         Text(
             text = "Рейтинг: ${"%.1f".format(rating)}/10",
