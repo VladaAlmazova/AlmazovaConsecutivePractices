@@ -1,7 +1,6 @@
 package com.example.almazovaconsecutivepractices.listWithDetails.presentation.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,19 +15,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Bookmark
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.BookmarkBorder
-import androidx.compose.material.icons.outlined.StarBorder
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ComposeCompilerApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,7 +29,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester.Companion.createRefs
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -44,18 +36,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
 import coil3.compose.AsyncImage
 import com.example.almazovaconsecutivepractices.data.domain.entity.AnimeFullEntity
-import com.example.almazovaconsecutivepractices.data.domain.entity.Tag
 import com.example.almazovaconsecutivepractices.data.repository.AnimeRepository
+import com.example.almazovaconsecutivepractices.screens.CircularBackButton
 import com.github.terrakok.modo.Screen
 import com.github.terrakok.modo.ScreenKey
 import com.github.terrakok.modo.generateScreenKey
 import com.github.terrakok.modo.stack.LocalStackNavigation
 import com.github.terrakok.modo.stack.back
 import kotlinx.parcelize.Parcelize
-import androidx.constraintlayout.compose.ConstraintLayout
-import kotlinx.coroutines.flow.merge
 
 @Parcelize
 class DetailsScreen(
@@ -65,10 +56,10 @@ class DetailsScreen(
     @Composable
     override fun Content(modifier: Modifier) {
         val stackNavigation = LocalStackNavigation.current
-        Column(modifier = Modifier) {
-            UpToolbar(title = " ", onBackClick = { stackNavigation.back() })
+        val anime = AnimeRepository().getById(titleId)
 
-            val anime = AnimeRepository().getById(titleId)
+        ConstraintLayout(modifier = Modifier.fillMaxSize()) {
+            val (backRef) = createRefs()
 
             if (anime == null) {
                 Text(
@@ -80,20 +71,18 @@ class DetailsScreen(
             } else {
                 ConstraintLayoutContent(anime)
             }
+
+            CircularBackButton(
+                onBackClick = { stackNavigation.back() },
+                modifier = Modifier.constrainAs(backRef) {
+                    top.linkTo(parent.top)
+                    start.linkTo(parent.start)
+                })
         }
     }
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun UpToolbar(title: String, onBackClick: () -> Unit) {
-    TopAppBar(title = { Text(title) }, navigationIcon = {
-        IconButton(onClick = onBackClick) {
-            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад")
-        }
-    })
-}
 
 @Composable
 fun ConstraintLayoutContent(animeFullEntity: AnimeFullEntity) {
@@ -148,12 +137,6 @@ fun ConstraintLayoutContent(animeFullEntity: AnimeFullEntity) {
         }, rating = myScore, onRatingChanged = { newRating -> myScore = newRating })
     }
 }
-
-//@Preview
-//@Composable
-//fun prevDetails() {
-//    ConstraintLayoutContent()
-//}
 
 @Composable
 fun SaveToCollectionButton(modifier: Modifier, isSaved: Boolean = false, onClick: () -> Unit = {}) {
@@ -210,12 +193,6 @@ fun ScrollableGenres(
     }
 }
 
-//@Preview
-//@Composable
-//fun prevScrollableGenres(){
-//    ScrollableGenres(AnimeRepository().getById(1)!!.genres)
-//}
-
 @Composable
 fun TitleImg(modifier: Modifier, imgURL: String) {
     AsyncImage(
@@ -227,13 +204,6 @@ fun TitleImg(modifier: Modifier, imgURL: String) {
         contentDescription = null
     )
 }
-
-//@Preview
-//@Composable
-//fun prevTitleImg(){
-//    TitleImg(AnimeRepository().getById(1)!!.coverImageExtraLargeUrl);
-//}
-
 
 @Composable
 fun LargeTextAverageScore(averageScore: Int) {

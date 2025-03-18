@@ -6,9 +6,4 @@ class AnimeFullEntity(
     val coverImageExtraLargeUrl: String,
     val averageScore: Int,
     val genres: List<String>,
-    val tags: List<Tag>
-)
-
-class Tag(
-    val name: String
 )

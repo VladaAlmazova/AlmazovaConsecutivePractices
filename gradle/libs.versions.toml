@@ -36,6 +36,7 @@ coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version
 androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayout-compose"}
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 compose-material-icons = { module = "androidx.compose.material:material-icons-extended", version.ref = "compose-material-icons" }
+compose-material = { group = "androidx.compose.material", name = "material" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

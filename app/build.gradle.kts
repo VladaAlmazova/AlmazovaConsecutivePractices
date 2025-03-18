@@ -54,6 +54,7 @@ dependencies {
     implementation(libs.modo.compose)
     implementation(libs.coil.compose)
     implementation(libs.compose.material.icons)
+    implementation(libs.compose.material)
     implementation(libs.coil.network.okhttp)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.constraintlayout)
