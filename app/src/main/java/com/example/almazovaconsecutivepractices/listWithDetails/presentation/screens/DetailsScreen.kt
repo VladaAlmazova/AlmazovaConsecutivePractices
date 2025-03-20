@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material3.Icon
@@ -40,7 +42,6 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import coil3.compose.AsyncImage
 import com.example.almazovaconsecutivepractices.data.domain.entity.AnimeFullEntity
 import com.example.almazovaconsecutivepractices.data.repository.AnimeRepository
-import com.example.almazovaconsecutivepractices.screens.CircularBackButton
 import com.github.terrakok.modo.Screen
 import com.github.terrakok.modo.ScreenKey
 import com.github.terrakok.modo.generateScreenKey
@@ -236,5 +237,26 @@ fun SliderRating(
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold
         )
+    }
+}
+
+@Composable
+fun CircularBackButton(modifier: Modifier = Modifier, onBackClick: () -> Unit) {
+    Box(modifier = modifier.fillMaxSize()) {
+        IconButton(
+            onClick = onBackClick,
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(16.dp)
+                .size(48.dp)
+                .clip(CircleShape)
+                .background(MaterialTheme.colors.primary) // Фон кнопки
+        ) {
+            androidx.compose.material3.Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = "Назад",
+                tint = Color.White
+            )
+        }
     }
 }

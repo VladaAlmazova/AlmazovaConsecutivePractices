@@ -2,14 +2,12 @@ package com.example.almazovaconsecutivepractices.listWithDetails.presentation.sc
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.example.almazovaconsecutivepractices.data.domain.entity.AnimeShortEntity
 import com.example.almazovaconsecutivepractices.data.repository.AnimeRepository
-import com.example.almazovaconsecutivepractices.screens.BottomNavigationBar
 import com.github.terrakok.modo.Screen
 import com.github.terrakok.modo.ScreenKey
 import com.github.terrakok.modo.generateScreenKey
@@ -32,30 +29,20 @@ class ListScreen(override val screenKey: ScreenKey = generateScreenKey()) : Scre
     override fun Content(modifier: Modifier) {
         val stackNavigation = LocalStackNavigation.current
 
-        Scaffold(
-            bottomBar = { BottomNavigationBar() }
-        ) { innerPadding ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-            ) {
-                LazyColumn(
-                    modifier = modifier
-                        .fillMaxSize()
-                        .padding(top = 24.dp, start = 10.dp, end = 10.dp)
+        LazyColumn(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(top = 24.dp, start = 10.dp, end = 10.dp)
 
-                )
-                {
-                    items(AnimeRepository().getList()) { item ->
-                        AnimeItem(
-                            item = item,
-                            openNextScreen = {
-                                stackNavigation.forward(DetailsScreen(item.id))
-                            }
-                        )
+        )
+        {
+            items(AnimeRepository().getList()) { item ->
+                AnimeItem(
+                    item = item,
+                    openNextScreen = {
+                        stackNavigation.forward(DetailsScreen(item.id))
                     }
-                }
+                )
             }
         }
     }
