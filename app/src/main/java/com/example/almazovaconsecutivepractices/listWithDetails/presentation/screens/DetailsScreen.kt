@@ -24,10 +24,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,13 +37,14 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import coil3.compose.AsyncImage
 import com.example.almazovaconsecutivepractices.data.domain.entity.AnimeFullEntity
-import com.example.almazovaconsecutivepractices.data.repository.AnimeRepository
+import com.example.almazovaconsecutivepractices.listWithDetails.presentation.viewModel.DetailsViewModel
 import com.github.terrakok.modo.Screen
 import com.github.terrakok.modo.ScreenKey
 import com.github.terrakok.modo.generateScreenKey
 import com.github.terrakok.modo.stack.LocalStackNavigation
-import com.github.terrakok.modo.stack.back
 import kotlinx.parcelize.Parcelize
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Parcelize
 class DetailsScreen(
@@ -57,7 +54,10 @@ class DetailsScreen(
     @Composable
     override fun Content(modifier: Modifier) {
         val stackNavigation = LocalStackNavigation.current
-        val anime = AnimeRepository().getById(titleId)
+
+
+        val viewModel = koinViewModel<DetailsViewModel> { parametersOf(stackNavigation, titleId) }
+        val anime = viewModel.viewState.anime
 
         ConstraintLayout(modifier = Modifier.fillMaxSize()) {
             val (backRef) = createRefs()
@@ -70,11 +70,11 @@ class DetailsScreen(
                     fontSize = 20.sp
                 )
             } else {
-                ConstraintLayoutContent(anime)
+                ConstraintLayoutContent(anime, viewModel)
             }
 
             CircularBackButton(
-                onBackClick = { stackNavigation.back() },
+                onBackClick = { viewModel.back() },
                 modifier = Modifier.constrainAs(backRef) {
                     top.linkTo(parent.top)
                     start.linkTo(parent.start)
@@ -86,8 +86,8 @@ class DetailsScreen(
 
 
 @Composable
-fun ConstraintLayoutContent(animeFullEntity: AnimeFullEntity) {
-    var myScore by remember { mutableStateOf(0f) }  // Добавляем состояние
+fun ConstraintLayoutContent(animeFullEntity: AnimeFullEntity, viewModel: DetailsViewModel) {
+//    var myScore by remember { mutableStateOf(0f) }  // Добавляем состояние
 
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
         val (imgRef, titleRef, scoreRef, myScoreRef, genresRef, tagsRef, saveRef) = createRefs()
@@ -112,7 +112,10 @@ fun ConstraintLayoutContent(animeFullEntity: AnimeFullEntity) {
             end.linkTo(
                 anchor = parent.end, margin = 16.dp
             )
-        })
+        },
+            onClick = { viewModel.onSavedChanged(!viewModel.viewState.isSavedAnime) },
+            isSaved = viewModel.viewState.isSavedAnime
+        )
 
         ScrollableGenres(items = animeFullEntity.genres,
             modifier = Modifier.constrainAs(genresRef) {
@@ -135,7 +138,9 @@ fun ConstraintLayoutContent(animeFullEntity: AnimeFullEntity) {
             top.linkTo(scoreRef.bottom, margin = 16.dp)
             start.linkTo(parent.start)
             end.linkTo(parent.end)
-        }, rating = myScore, onRatingChanged = { newRating -> myScore = newRating })
+        },
+            rating = viewModel.viewState.rating,
+            onRatingChanged = { newRating -> viewModel.onRatingChanged(newRating) })
     }
 }
 

@@ -6,4 +6,5 @@ class AnimeFullEntity(
     val coverImageExtraLargeUrl: String,
     val averageScore: Int,
     val genres: List<String>,
+    var isSaved: Boolean = false
 )

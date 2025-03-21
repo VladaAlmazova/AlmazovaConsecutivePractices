@@ -58,6 +58,11 @@ dependencies {
     implementation(libs.coil.network.okhttp)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.constraintlayout)
+    implementation(libs.koin.android)
+    implementation(libs.koin.compose)
+    implementation(libs.koin.androidx.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

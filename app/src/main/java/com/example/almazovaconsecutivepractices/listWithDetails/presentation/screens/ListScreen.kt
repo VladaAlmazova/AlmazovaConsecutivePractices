@@ -15,32 +15,38 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.example.almazovaconsecutivepractices.data.domain.entity.AnimeShortEntity
-import com.example.almazovaconsecutivepractices.data.repository.AnimeRepository
+import com.example.almazovaconsecutivepractices.listWithDetails.presentation.viewModel.ListViewModel
 import com.github.terrakok.modo.Screen
 import com.github.terrakok.modo.ScreenKey
 import com.github.terrakok.modo.generateScreenKey
 import com.github.terrakok.modo.stack.LocalStackNavigation
-import com.github.terrakok.modo.stack.forward
 import kotlinx.parcelize.Parcelize
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Parcelize
 class ListScreen(override val screenKey: ScreenKey = generateScreenKey()) : Screen {
     @Composable
     override fun Content(modifier: Modifier) {
         val stackNavigation = LocalStackNavigation.current
+        val viewModel = koinViewModel<ListViewModel> { parametersOf(stackNavigation) }
+        val state = viewModel.viewState
+
+        if (state.isEmpty) {
+            Text("Информация не найдена")
+        }
 
         LazyColumn(
             modifier = modifier
                 .fillMaxSize()
                 .padding(top = 24.dp, start = 10.dp, end = 10.dp)
-
         )
         {
-            items(AnimeRepository().getList()) { item ->
+            items(viewModel.viewState.items) { item ->
                 AnimeItem(
                     item = item,
                     openNextScreen = {
-                        stackNavigation.forward(DetailsScreen(item.id))
+                        viewModel.onItemClicked(item.id)
                     }
                 )
             }
