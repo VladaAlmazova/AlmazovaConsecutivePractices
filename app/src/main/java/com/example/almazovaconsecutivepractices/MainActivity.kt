@@ -3,45 +3,25 @@ package com.example.almazovaconsecutivepractices
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.almazovaconsecutivepractices.ui.theme.AlmazovaConsecutivePracticesTheme
+import com.example.almazovaconsecutivepractices.screens.MainTabScreen
+import com.github.terrakok.modo.Modo.rememberRootScreen
+import com.github.terrakok.modo.RootScreen
+import com.github.terrakok.modo.stack.DefaultStackScreen
+import com.github.terrakok.modo.stack.StackNavModel
+import org.koin.compose.KoinContext
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
-            AlmazovaConsecutivePracticesTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+            KoinContext {
+                val rootScreen: RootScreen<DefaultStackScreen> = rememberRootScreen {
+                    DefaultStackScreen(StackNavModel(MainTabScreen()))
                 }
+                rootScreen.Content(modifier = Modifier.fillMaxSize())
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    AlmazovaConsecutivePracticesTheme {
-        Greeting("Android")
     }
 }

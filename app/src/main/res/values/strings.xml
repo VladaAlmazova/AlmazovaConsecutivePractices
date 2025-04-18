@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">AlmazovaConsecutivePractices</string>
+    <string name="anime_empty_result">Аниме не найдено</string>
 </resources>
