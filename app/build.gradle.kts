@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("kotlin-parcelize")
+    alias(libs.plugins.apollo)
+//    id("com.apollographql.apollo3") version "3.8.5"
 }
 
 android {
@@ -63,6 +65,15 @@ dependencies {
     implementation(libs.koin.androidx.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.logging.interceptor)
+    implementation(libs.okhttp)
+    implementation(libs.androidx.appcompat)
+
+    implementation(libs.apollo.runtime)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -70,4 +81,12 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+}
+
+apollo {
+    service("service") {
+        packageName.set("com.example.almazovaconsecutivepractices")  // Укажите ваш пакет!
+        // Опционально (если нужно):
+        generateKotlinModels.set(true)  // Генерировать Kotlin-модели
+    }
 }
