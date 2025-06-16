@@ -1,6 +1,7 @@
 package com.example.almazovaconsecutivepractices.listWithDetails.presentation.viewModel
 
 import android.util.Log
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -20,9 +21,24 @@ class DetailsViewModel(
     private val id: Int
 ) : ViewModel() {
 
-
     private val mutableState = MutableDetailsState()
     val viewState = mutableState as DetailsState
+
+    private val _anime = mutableStateOf<AnimeFullEntity?>(null)
+    val anime: State<AnimeFullEntity?> = _anime
+
+    fun loadAnimeDetails() {
+        viewModelScope.launch {
+            _anime.value = try {
+                repository.getById(id).also {
+                    Log.d("DetailsVM", "Loaded: $it")
+                }
+            } catch (e: Exception) {
+                Log.e("DetailsVM", "Error loading anime", e)
+                null
+            }
+        }
+    }
 
     init {
 //        mutableState.anime = repository.getById(id)

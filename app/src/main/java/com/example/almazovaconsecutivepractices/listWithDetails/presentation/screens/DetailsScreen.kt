@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.TopAppBar
@@ -24,6 +25,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,6 +41,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import coil3.compose.AsyncImage
 import com.example.almazovaconsecutivepractices.R
 import com.example.almazovaconsecutivepractices.data.domain.entity.AnimeFullEntity
@@ -56,13 +64,24 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun DetailsContent(titleId: Int, modifier: Modifier = Modifier) {
     val stackNavigation = LocalStackNavigation.current
-//    val viewModel = koinViewModel<DetailsViewModel> { parametersOf(stackNavigation, titleId) }
-//    val anime = viewModel.viewState.anime
-
     val viewModel = koinViewModel<DetailsViewModel> {
         parametersOf(stackNavigation, titleId)
     }
-    val anime = viewModel.viewState.anime
+//    val anime by viewModel.viewState.anime.collectAsState()
+//    val anime = viewModel.viewState.anime
+    val animeState = viewModel.anime.value
+    val lifecycleOwner = LocalLifecycleOwner.current
+    var isScreenActive by remember { mutableStateOf(true) }
+
+    DisposableEffect(lifecycleOwner) {
+        onDispose {
+            isScreenActive = false
+        }
+    }
+
+//    LaunchedEffect(anime) {
+//        Log.d("DetailsScreen", "Anime state: $anime")
+//    }
 
     Scaffold(
         topBar = {
@@ -80,21 +99,45 @@ fun DetailsContent(titleId: Int, modifier: Modifier = Modifier) {
             )
         },
         content = { paddingValues ->
-            ConstraintLayout(
+            LaunchedEffect(Unit) {
+                if (isScreenActive && animeState == null) {
+                    viewModel.loadAnimeDetails()
+                }
+            }
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
-            )
-            {
-                val (backRef) = createRefs()
-                anime?.let { nonNullAnime ->
-                    ConstraintLayoutContent(nonNullAnime, viewModel)
-                } ?: run {
-                    FullscreenText(stringResource(R.string.anime_empty_result))
+            ) {
+                when {
+                    // 4. Проверка isScreenActive перед отрисовкой
+                    !isScreenActive -> Unit // Экран закрыт, ничего не рисуем
+                    animeState == null -> FullscreenText(stringResource(R.string.anime_empty_result))
+                    else -> SafeConstraintLayoutContent(animeState!!, viewModel)
                 }
             }
         }
     )
+}
+
+@Composable
+private fun SafeConstraintLayoutContent(
+    anime: AnimeFullEntity,
+    viewModel: DetailsViewModel
+) {
+    ConstraintLayout(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+    )
+    {
+        val (backRef) = createRefs()
+        anime.let { nonNullAnime ->
+            ConstraintLayoutContent(nonNullAnime, viewModel)
+        } ?: run {
+            FullscreenText(stringResource(R.string.anime_empty_result))
+        }
+    }
 }
 
 /**
@@ -109,37 +152,6 @@ class DetailsScreen(val titleId: Int, override val screenKey: ScreenKey = genera
     }
 }
 
-
-//@Parcelize
-//class DetailsScreen(
-//    val titleId: Int, override val screenKey: ScreenKey = generateScreenKey()
-//) : Screen {
-//
-//    @Composable
-//    override fun Content(modifier: Modifier) {
-//        val stackNavigation = LocalStackNavigation.current
-//
-//
-//        val viewModel = koinViewModel<DetailsViewModel> { parametersOf(stackNavigation, titleId) }
-//        val anime = viewModel.viewState.anime
-//
-//        ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-//            val (backRef) = createRefs()
-//            anime?.let { nonNullAnime ->
-//                ConstraintLayoutContent(nonNullAnime, viewModel)
-//            } ?: run {
-//                FullscreenText(stringResource(R.string.anime_empty_result))
-//            }
-//
-//            CircularBackButton(
-//                onBackClick = { viewModel.back() },
-//                modifier = Modifier.constrainAs(backRef) {
-//                    top.linkTo(parent.top)
-//                    start.linkTo(parent.start)
-//                })
-//        }
-//    }
-//}
 
 /**
  * выводит крупный текст на весь экран
