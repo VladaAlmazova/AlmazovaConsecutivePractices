@@ -1,0 +1,13 @@
+query GetAnimeFull($id: Int) {
+    Media(id: $id, type: ANIME) {
+        id
+        title {
+            english
+        }
+        coverImage {
+            extraLarge
+        }
+        averageScore
+        genres
+    }
+}

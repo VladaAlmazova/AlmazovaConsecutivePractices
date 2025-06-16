@@ -56,8 +56,14 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun DetailsContent(titleId: Int, modifier: Modifier = Modifier) {
     val stackNavigation = LocalStackNavigation.current
-    val viewModel = koinViewModel<DetailsViewModel> { parametersOf(stackNavigation, titleId) }
+//    val viewModel = koinViewModel<DetailsViewModel> { parametersOf(stackNavigation, titleId) }
+//    val anime = viewModel.viewState.anime
+
+    val viewModel = koinViewModel<DetailsViewModel> {
+        parametersOf(stackNavigation, titleId)
+    }
     val anime = viewModel.viewState.anime
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -192,7 +198,7 @@ fun ConstraintLayoutContent(animeFullEntity: AnimeFullEntity, viewModel: Details
             start.linkTo(parent.start)
             end.linkTo(parent.end)
         }) {
-            LargeTextAverageScore(animeFullEntity.averageScore)
+            animeFullEntity.averageScore?.let { LargeTextAverageScore(it) }
         }
 
         SliderRating(modifier = Modifier.constrainAs(myScoreRef) {

@@ -73,6 +73,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
 
     implementation(libs.apollo.runtime)
+    implementation(libs.androidx.espresso.core)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -85,7 +86,7 @@ dependencies {
 
 apollo {
     service("service") {
-        packageName.set("com.example.almazovaconsecutivepractices")  // Укажите ваш пакет!
+        packageName.set("com.example")  // Укажите ваш пакет!
         // Опционально (если нужно):
         generateKotlinModels.set(true)  // Генерировать Kotlin-модели
     }

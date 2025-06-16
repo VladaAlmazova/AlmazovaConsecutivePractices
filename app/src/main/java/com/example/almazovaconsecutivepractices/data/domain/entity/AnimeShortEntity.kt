@@ -4,5 +4,5 @@ class AnimeShortEntity(
     val id: Int,
     val title: String,
     val coverImageMediumUrl: String,
-    val averageScore: Int
+    val averageScore: Int?
 )

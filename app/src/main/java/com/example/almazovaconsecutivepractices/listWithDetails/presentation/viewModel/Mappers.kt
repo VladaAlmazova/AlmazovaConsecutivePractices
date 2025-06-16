@@ -11,6 +11,8 @@ object MapperAnime {
      * Изменение формата оценки для сокращенных данных
      */
     fun AnimeShortEntity.formatAverageScore(): String {
+        if (averageScore == null)
+            return "0.0"
         return formatAverageScore(averageScore)
     }
 
@@ -18,6 +20,8 @@ object MapperAnime {
      * Изменение формата оценки для основных данных
      */
     fun AnimeFullEntity.formatAverageScore(): String {
+        if (averageScore == null)
+            return "0.0"
         return formatAverageScore(averageScore)
     }
 
