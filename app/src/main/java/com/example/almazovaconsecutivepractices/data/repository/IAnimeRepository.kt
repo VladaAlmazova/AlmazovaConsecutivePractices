@@ -11,16 +11,23 @@ interface IAnimeRepository {
      * Возвращает список сокращенной информации о тайтлах
      * @param word - ищет тайтлы в названиях которых есть эта подстрока
      */
-    fun getList(word: String): List<AnimeShortEntity>
+//    suspend fun getList(word: String): List<AnimeShortEntity>
 
     /**
      * Возвращает полный список тайтлов
      */
-    fun getList(): List<AnimeShortEntity> = getList("")
+//    suspend fun getList(): List<AnimeShortEntity> = getList("")
+
+    /**
+     * Возвращает полный список тайтлов с возможностью подгрузки
+     */
+    suspend fun getList(
+        loadMore: Boolean = false
+    ): List<AnimeShortEntity>
 
     /**
      * Возвращает полную информацию о тайтле
      * @param id - идентификатор аниме
      */
-    fun getById(id: Int): AnimeFullEntity?
+    suspend fun getById(id: Int): AnimeFullEntity?
 }
